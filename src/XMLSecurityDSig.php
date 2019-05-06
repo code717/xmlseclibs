@@ -671,6 +671,13 @@ class XMLSecurityDSig
         }
 
         $canonicalData = $this->processTransforms($refNode, $node);
+        // hardcode start
+		$doc =  new DOMDocument('1.0', 'UTF-8');
+        $doc->loadXML($canonicalData);
+        $sId = $doc->documentElement->getAttribute('Id');
+        $doc->documentElement->removeAttribute('Id');
+        $canonicalData = '<Object xmlns="http://www.w3.org/2000/09/xmldsig#" Id="'.$sId.'">'.$doc->saveXML($doc->documentElement).'</Object>';
+		// hardcode end
         $digValue = $this->calculateDigest($algorithm, $canonicalData);
 
         $digestMethod = $this->createNewSignNode('DigestMethod');
